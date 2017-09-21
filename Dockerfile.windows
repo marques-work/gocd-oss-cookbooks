@@ -1,21 +1,54 @@
 FROM microsoft/windowsservercore
 MAINTAINER GoCD Team <go-cd-dev@googlegroups.com>
 
-COPY . /chef-cookbooks
+ARG GOLANG_BOOTSTRAPPER_VERSION=1.1
+ARG P4_VERSION=15.1
+ARG P4D_VERSION=16.2
+ARG NODEJS_VERSION=6.11.0
 
-SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
+RUN \
+  @"%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && \
+  SET "PATH=%PATH%;%ALLUSERSPROFILE%\\chocolatey\\bin" && \
+  choco install -y \
+    nodejs.install --version=6.11.0 && \
+  choco install -y \
+    git.install \
+    hg \
+    svn \
+    yarn \
+    jdk8 \
+    python2 \
+    vcbuildtools \
+    microsoft-build-tools && \
+  rmdir /s /q \
+    "C:\\Users\\ContainerAdministrator\\AppData\\Local\\Temp\\chocolatey"
 
-RUN Write-Host 'Downloading chef'; \
-    Invoke-WebRequest "https://packages.chef.io/files/stable/chef/13.4.24/windows/2016/chef-client-13.4.24-1-x64.msi" -Outfile chef-client.msi -UseBasicParsing; \
-    Write-Host 'Installing chef'; \
-    Start-Process cmd.exe -ArgumentList '/c c:\windows\system32\msiexec.exe /i chef-client.msi /quiet /norestart ADDLOCAL="ChefClientFeature"' -NoNewWindow -Wait; \
-    Remove-Item chef-client.msi; \
-    Write-Host 'Running chef' ; \
-    Start-Process "cmd.exe" -ArgumentList '/c', 'set' -NoNewWindow -Wait; \
-    Start-Process "cmd.exe" -ArgumentList '/c C:/opscode/chef/bin/chef-solo --config=c:/chef-cookbooks/solo.rb' -NoNewWindow -Wait; \
-    Write-Host 'Finished executing chef. Cleaning up...' ; \
-    Start-Process "cmd.exe" -ArgumentList '/c rmdir /s /q c:\chef c:\chef-cookbooks' -NoNewWindow -Wait
+ADD ["https://s3.amazonaws.com/mirrors-archive/local/perforce/r${P4_VERSION}/bin.ntx64/p4.exe", "C:/Program Files (x86)/Perforce/bin/p4.exe"]
+ADD ["https://s3.amazonaws.com/mirrors-archive/local/perforce/r${P4D_VERSION}/bin.ntx64/p4d.exe", "C:/Program Files (x86)/Perforce/bin/p4d.exe"]
+ADD ["https://github.com/ketan/gocd-golang-bootstrapper/releases/download/${GOLANG_BOOTSTRAPPER_VERSION}/go-bootstrapper-${GOLANG_BOOTSTRAPPER_VERSION}.windows.amd64.exe", "C:/go-agent.exe"]
 
-COPY hostsfile.windows 'C:\Windows\System32\drivers\etc\hosts'
+# various package managers to use mirrors
+COPY custom-cookbooks/go-user/files/default/gitconfig C:/Users/ContainerAdministrator/.gitconfig
+COPY custom-cookbooks/go-user/files/default/npmrc C:/Users/ContainerAdministrator/.npmrc
+COPY custom-cookbooks/go-user/files/default/init.gradle C:/Users/ContainerAdministrator/.gradle/init.gradle
+COPY custom-cookbooks/go-user/files/default/settings.xml C:/Users/ContainerAdministrator/.m2/settings.xml
+COPY custom-cookbooks/go-user/files/default/bundle-config C:/Users/ContainerAdministrator/.bundle/config
+COPY hostsfile.windows C:/Windows/System32/drivers/etc/hosts
 
-CMD ["/bootstrap.cmd"]
+RUN SETX PATH "%PATH%;%ProgramFiles(x86)%\\Perforce\\bin" && \
+  echo "Ensure that npm uses msvc 2015 to compile native stuff" && \
+  npm config set msvs_version 2015
+
+RUN \
+  git clone https://github.com/gocd/gocd --depth 1 "C:\\gocd" && \
+  cd "C:\\gocd" && \
+  gradlew.bat prepare compileTestJava --no-daemon --no-build-cache && \
+  tasklist && \
+  taskkill /F /IM java.exe && \
+  echo sleeping && \
+  timeout 5 && \
+  echo done sleeping && \
+  tasklist && \
+  rmdir /s /q "C:\\gocd"
+
+CMD C:/go-agent.exe
