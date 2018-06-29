@@ -27,17 +27,18 @@ ADD ["https://s3.amazonaws.com/mirrors-archive/local/perforce/r${P4_VERSION}/bin
 ADD ["https://s3.amazonaws.com/mirrors-archive/local/perforce/r${P4D_VERSION}/bin.ntx64/p4d.exe", "C:/Program Files (x86)/Perforce/bin/p4d.exe"]
 ADD ["https://github.com/ketan/gocd-golang-bootstrapper/releases/download/${GOLANG_BOOTSTRAPPER_VERSION}/go-bootstrapper-${GOLANG_BOOTSTRAPPER_VERSION}.windows.amd64.exe", "C:/go-agent.exe"]
 
+RUN SETX PATH "%PATH%;%ProgramFiles(x86)%\\Perforce\\bin" && \
+  echo "Ensure that npm uses msvc 2015 to compile native stuff" && \
+  npm config set msvs_version 2015
+
 # various package managers to use mirrors
 COPY custom-cookbooks/go-user/files/default/gitconfig C:/Users/ContainerAdministrator/.gitconfig
 COPY custom-cookbooks/go-user/files/default/npmrc C:/Users/ContainerAdministrator/.npmrc
 COPY custom-cookbooks/go-user/files/default/init.gradle C:/Users/ContainerAdministrator/.gradle/init.gradle
 COPY custom-cookbooks/go-user/files/default/settings.xml C:/Users/ContainerAdministrator/.m2/settings.xml
 COPY custom-cookbooks/go-user/files/default/bundle-config C:/Users/ContainerAdministrator/.bundle/config
-COPY hostsfile.windows C:/Windows/System32/drivers/etc/hosts
+# COPY hostsfile.windows C:/Windows/System32/drivers/etc/hosts
 
-RUN SETX PATH "%PATH%;%ProgramFiles(x86)%\\Perforce\\bin" && \
-  echo "Ensure that npm uses msvc 2015 to compile native stuff" && \
-  npm config set msvs_version 2015
 
 # RUN \
 #   git clone https://github.com/gocd/gocd --depth 1 "C:\\gocd" && \
