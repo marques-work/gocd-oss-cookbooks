@@ -39,16 +39,16 @@ RUN SETX PATH "%PATH%;%ProgramFiles(x86)%\\Perforce\\bin" && \
   echo "Ensure that npm uses msvc 2015 to compile native stuff" && \
   npm config set msvs_version 2015
 
-RUN \
-  git clone https://github.com/gocd/gocd --depth 1 "C:\\gocd" && \
-  cd "C:\\gocd" && \
-  gradlew.bat prepare compileTestJava --no-daemon --no-build-cache && \
-  tasklist && \
-  taskkill /F /IM java.exe && \
-  echo sleeping && \
-  timeout 5 && \
-  echo done sleeping && \
-  tasklist && \
-  rmdir /s /q "C:\\gocd"
+# RUN \
+#   git clone https://github.com/gocd/gocd --depth 1 "C:\\gocd" && \
+#   cd "C:\\gocd" && \
+#   gradlew.bat prepare compileTestJava --no-daemon --no-build-cache && \
+#   tasklist && \
+#   taskkill /F /IM java.exe && \
+#   echo sleeping && \
+#   timeout 5 && \
+#   echo done sleeping && \
+#   tasklist && \
+#   rmdir /s /q "C:\\gocd"
 
 CMD C:/go-agent.exe
