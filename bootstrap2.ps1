@@ -11,4 +11,4 @@ timeout 5
 echo done sleeping
 tasklist
 Remove-Item -Path C:\\gocd -Force -Recurse
-mkdir c:\\go
+New-Item C:\\go -ItemType Directory
