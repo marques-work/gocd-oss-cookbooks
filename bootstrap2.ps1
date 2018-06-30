@@ -1,3 +1,5 @@
+$ErrorActionPreference = "Stop" 
+
 git clone https://github.com/gocd/gocd --depth 1 C:\\gocd --quiet
 cd C:\\gocd
 tasklist
