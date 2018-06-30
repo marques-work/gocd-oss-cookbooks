@@ -1,3 +1,4 @@
+$ErrorActionPreference = "Stop" 
 Set-ExecutionPolicy Bypass
 iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
