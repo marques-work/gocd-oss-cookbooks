@@ -1,6 +1,7 @@
-git clone https://github.com/gocd/gocd --depth 1 C:\\gocd
+git clone https://github.com/gocd/gocd --depth 1 C:\\gocd --quiet
 cd C:\\gocd
-./gradlew.bat compileAll yarnInstall prepareJRuby --no-build-cache
+tasklist
+./gradlew.bat compileAll yarnInstall prepareJRuby --no-build-cache --quiet
 tasklist
 taskkill /F /IM java.exe
 echo sleeping
