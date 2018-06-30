@@ -2,15 +2,13 @@ $ErrorActionPreference = "Stop"
 
 git clone https://github.com/gocd/gocd --depth 1 C:\\gocd --quiet
 cd C:\\gocd
-tasklist
 ./gradlew.bat compileAll yarnInstall prepareJRuby --no-build-cache --quiet
+timeout 5
 ./gradlew.bat clean --quiet
-git clean -ffddx
+timeout 5
 tasklist
 taskkill /F /IM java.exe
-echo sleeping
-timeout 5
-echo done sleeping
+git clean -ffddx
 tasklist
 cd \
 Remove-Item -Path C:\\gocd -Force -Recurse
