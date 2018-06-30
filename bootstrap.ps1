@@ -3,11 +3,12 @@ $P4_VERSION='15.1'
 $P4D_VERSION='16.2'
 $NODEJS_VERSION='6.13.1'
 $chocolateyUseWindowsCompression=false
-
 $ErrorActionPreference = "Stop" 
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
 Set-ExecutionPolicy Bypass
 iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
 choco install -y nodejs.install --version="${NODEJS_VERSION}"
 choco install -y hg svn yarn jdk8
 Remove-Item C:\\Users\\ContainerAdministrator\\AppData\\Local\\Temp\\chocolatey -Force -Recurse
