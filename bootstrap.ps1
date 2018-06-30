@@ -25,5 +25,5 @@ echo sleeping
 timeout 5
 echo done sleeping
 tasklist
-rmdir /s /q C:\\gocd
+Remove-Item -Path C:\\gocd -Force -Recurse
 mkdir c:\\go
