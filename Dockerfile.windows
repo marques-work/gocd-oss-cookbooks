@@ -5,14 +5,14 @@ ARG GOLANG_BOOTSTRAPPER_VERSION=1.1
 ARG P4_VERSION=15.1
 ARG P4D_VERSION=16.2
 ARG NODEJS_VERSION=6.11.0
+ENV chocolateyUseWindowsCompression false
 
-RUN \
-  @"%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && \
-  SET "PATH=%PATH%;%ALLUSERSPROFILE%\\chocolatey\\bin" && \
-  choco install -y \
-    nodejs.install --version=6.11.0 && \
-  choco install -y \
-    git.install \
+RUN powershell Set-ExecutionPolicy Bypass;
+RUN powershell -Command iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'));
+
+RUN choco install -y \
+    nodejs.install --version=6.11.0
+RUN choco install -y \
     hg \
     svn \
     yarn \
@@ -23,11 +23,16 @@ RUN \
   rmdir /s /q \
     "C:\\Users\\ContainerAdministrator\\AppData\\Local\\Temp\\chocolatey"
 
-ADD ["https://s3.amazonaws.com/mirrors-archive/local/perforce/r${P4_VERSION}/bin.ntx64/p4.exe", "C:/Program Files (x86)/Perforce/bin/p4.exe"]
-ADD ["https://s3.amazonaws.com/mirrors-archive/local/perforce/r${P4D_VERSION}/bin.ntx64/p4d.exe", "C:/Program Files (x86)/Perforce/bin/p4d.exe"]
-ADD ["https://github.com/ketan/gocd-golang-bootstrapper/releases/download/${GOLANG_BOOTSTRAPPER_VERSION}/go-bootstrapper-${GOLANG_BOOTSTRAPPER_VERSION}.windows.amd64.exe", "C:/go-agent.exe"]
+RUN powershell -C \
+  [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; \
+  Invoke-WebRequest https://s3.amazonaws.com/mirrors-archive/local/perforce/r%P4_VERSION%/bin.ntx64/p4.exe -Outfile "C:\\Program\ Files\ (x86)\\Perforce\\bin\\p4.exe"; \
+  Invoke-WebRequest https://s3.amazonaws.com/mirrors-archive/local/perforce/r%P4D_VERSION%/bin.ntx64/p4d.exe -Outfile "C:\\Program\ Files\ (x86)\\Perforce\\bin\\p4d.exe"; \
+  Invoke-WebRequest https://github.com/ketan/gocd-golang-bootstrapper/releases/download/%GOLANG_BOOTSTRAPPER_VERSION%/go-bootstrapper-%GOLANG_BOOTSTRAPPER_VERSION%.windows.amd64.exe -Outfile "C:\\go-agent.exe"; \
+  Invoke-WebRequest https://github.com/git-for-windows/git/releases/download/v2.18.0.windows.1/MinGit-2.18.0-busybox-64-bit.zip -OutFile C:\\git.zip; \
+  Expand-Archive C:\\git.zip C:\\git; \
+  Remove-Item -Path C:\\git.zip
 
-RUN SETX PATH "%PATH%;%ProgramFiles(x86)%\\Perforce\\bin" && \
+RUN SETX PATH "%PATH%;%ProgramFiles(x86)%\\Perforce\\bin;C:\\Git\\Cmd" && \
   echo "Ensure that npm uses msvc 2015 to compile native stuff" && \
   npm config set msvs_version 2015
 
@@ -39,17 +44,17 @@ COPY custom-cookbooks/go-user/files/default/settings.xml C:/Users/ContainerAdmin
 COPY custom-cookbooks/go-user/files/default/bundle-config C:/Users/ContainerAdministrator/.bundle/config
 # COPY hostsfile.windows C:/Windows/System32/drivers/etc/hosts
 
+RUN \
+  git clone https://github.com/gocd/gocd --depth 1 "C:\\gocd" && \
+  cd "C:\\gocd" && \
+  gradlew.bat compileAll yarnInstall prepareJRuby --no-daemon --no-build-cache && \
+  tasklist && \
+  taskkill /F /IM java.exe && \
+  echo sleeping && \
+  timeout 5 && \
+  echo done sleeping && \
+  tasklist && \
+  rmdir /s /q "C:\\gocd"
 
-# RUN \
-#   git clone https://github.com/gocd/gocd --depth 1 "C:\\gocd" && \
-#   cd "C:\\gocd" && \
-#   gradlew.bat prepare compileTestJava --no-daemon --no-build-cache && \
-#   tasklist && \
-#   taskkill /F /IM java.exe && \
-#   echo sleeping && \
-#   timeout 5 && \
-#   echo done sleeping && \
-#   tasklist && \
-#   rmdir /s /q "C:\\gocd"
-
-CMD C:/go-agent.exe
+RUN mkdir c:\\go
+CMD C:\\go-agent.exe
