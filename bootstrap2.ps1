@@ -10,5 +10,6 @@ echo sleeping
 timeout 5
 echo done sleeping
 tasklist
+cd \
 Remove-Item -Path C:\\gocd -Force -Recurse
 New-Item C:\\go -ItemType Directory
