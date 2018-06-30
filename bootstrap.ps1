@@ -20,7 +20,7 @@ Invoke-WebRequest https://github.com/git-for-windows/git/releases/download/v2.18
 Expand-Archive C:\\git.zip C:\\git
 Remove-Item -Path C:\\git.zip
 $newSystemPath = [System.Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine)
-$newSystemPath = "${newSystemPath};${env:ProgramFiles(x86)}\\Perforce\\bin;C:\\Git\\Cmd";\
+$newSystemPath = "${newSystemPath};${env:ProgramFiles(x86)}\\Perforce\\bin;C:\\Git\\Cmd"
 [Environment]::SetEnvironmentVariable("Path", $newSystemPath, [EnvironmentVariableTarget]::Machine)
 $env:Path = $newSystemPath + ";" + [System.Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::User)
 npm config set msvs_version 2015
