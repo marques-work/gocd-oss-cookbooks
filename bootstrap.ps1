@@ -2,7 +2,7 @@ $GOLANG_BOOTSTRAPPER_VERSION='1.1'
 $P4_VERSION='15.1'
 $P4D_VERSION='16.2'
 $NODEJS_VERSION='6.13.1'
-$chocolateyUseWindowsCompression=false
+$chocolateyUseWindowsCompression='false'
 $ErrorActionPreference = "Stop" 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
