@@ -8,9 +8,11 @@ COPY custom-cookbooks/go-user/files/default/npmrc C:/Users/ContainerAdministrato
 COPY custom-cookbooks/go-user/files/default/init.gradle C:/Users/ContainerAdministrator/.gradle/init.gradle
 COPY custom-cookbooks/go-user/files/default/settings.xml C:/Users/ContainerAdministrator/.m2/settings.xml
 COPY custom-cookbooks/go-user/files/default/bundle-config C:/Users/ContainerAdministrator/.bundle/config
-COPY bootstrap.ps1 C:/bootstrap.ps1
+COPY bootstrap1.ps1 C:/bootstrap1.ps1
+COPY bootstrap2.ps1 C:/bootstrap2.ps1
 # COPY hostsfile.windows C:/Windows/System32/drivers/etc/hosts
 
-RUN powershell -File C:\bootstrap.ps1
+RUN powershell -File C:\bootstrap1.ps1
+RUN powershell -File C:\bootstrap2.ps1
 
 CMD C:\\go-agent.exe
