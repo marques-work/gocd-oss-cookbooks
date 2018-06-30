@@ -1,12 +1,6 @@
 FROM microsoft/windowsservercore
 MAINTAINER GoCD Team <go-cd-dev@googlegroups.com>
 
-ARG GOLANG_BOOTSTRAPPER_VERSION=1.1
-ARG P4_VERSION=15.1
-ARG P4D_VERSION=16.2
-ARG NODEJS_VERSION=6.13.1
-ENV chocolateyUseWindowsCompression false
-
 
 # various package managers to use mirrors
 COPY custom-cookbooks/go-user/files/default/gitconfig C:/Users/ContainerAdministrator/.gitconfig
