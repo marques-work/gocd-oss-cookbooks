@@ -1,11 +1,11 @@
 FROM microsoft/windowsservercore
 LABEL maintainer="GoCD Team <go-cd-dev@googlegroups.com>"
 
-ENV TMP=c:\tmp \
-    TEMP=c:\tmp
+ENV TMP=c:\\tmp \
+    TEMP=c:\\tmp
 
-COPY provision C:\Users\ContainerAdministrator\provision
+COPY provision C:\\Users\\ContainerAdministrator\\provision
 
-RUN powershell -File C:\Users\ContainerAdministrator\user-config\provision.ps1
+RUN powershell -File C:\\Users\\ContainerAdministrator\\user-config\\provision.ps1
 
 CMD C:\\go-agent.exe
