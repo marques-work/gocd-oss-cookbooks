@@ -12,5 +12,5 @@ taskkill /F /IM java.exe
 git clean -ffddx
 tasklist
 cd \
-Remove-Item -Path C:\\gocd -Force -Recurse
-New-Item C:\\go -ItemType Directory
+Remove-Item -Path C:\\gocd -Force -Recurse | Out-Null
+New-Item C:\\go -ItemType Directory | Out-Null

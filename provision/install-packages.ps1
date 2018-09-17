@@ -33,6 +33,9 @@ choco install -y jdk8 --params "source=false" "static=false"
 # Remove chocolatey from temp location
 Remove-Item C:\\Users\\ContainerAdministrator\\AppData\\Local\\Temp\\chocolatey -Force -Recurse | Out-Null
 
+# install jabba
+Invoke-Expression (Invoke-WebRequest https://github.com/shyiko/jabba/raw/master/install.ps1 -UseBasicParsing).Content
+
 # install p4
 New-Item "${env:ProgramFiles(x86)}\\Perforce\\bin\\" -ItemType Directory | Out-Null
 Invoke-WebRequest https://s3.amazonaws.com/mirrors-archive/local/perforce/r$P4_VERSION/bin.ntx64/p4.exe -Outfile "C:\\Program Files (x86)\\Perforce\\bin\\p4.exe"
