@@ -1,10 +1,10 @@
 FROM microsoft/windowsservercore
 LABEL maintainer="GoCD Team <go-cd-dev@googlegroups.com>"
 
-SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
+# SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
-ENV TMP c:/tmp
-ENV TEMP c:/tmp
+ENV TMP=c:/tmp \
+    TEMP=c:/tmp
 
 COPY provision C:/Users/ContainerAdministrator/user-config
 COPY windows/*.ps1 C:/
