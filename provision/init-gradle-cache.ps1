@@ -3,7 +3,7 @@ $ErrorActionPreference = "Stop"
 
 git clone https://github.com/gocd/gocd --depth 1 C:\\gocd --quiet
 cd C:\\gocd
-./gradlew.bat compileAll yarnInstall prepareJRuby --no-build-cache --quiet
+./gradlew.bat prepare --no-build-cache --quiet
 timeout 5
 ./gradlew.bat clean --quiet
 timeout 5
