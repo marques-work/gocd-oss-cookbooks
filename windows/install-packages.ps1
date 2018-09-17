@@ -16,8 +16,7 @@ Copy-Item C:/Users/ContainerAdministrator/user-config/init.gradle C:/Users/Conta
 Copy-Item C:/Users/ContainerAdministrator/user-config/settings.xml C:/Users/ContainerAdministrator/.m2/settings.xml
 Copy-Item C:/Users/ContainerAdministrator/user-config/bundle-config C:/Users/ContainerAdministrator/.bundle/config
 
-# Create temp directory
-New-Item "C:/tmp" -ItemType Directory
+Remove-Item C:/Users/ContainerAdministrator/user-config -Recurse -Force
 
 # install chocolatey
 $chocolateyUseWindowsCompression='false'

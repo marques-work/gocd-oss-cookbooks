@@ -1,13 +1,14 @@
 FROM microsoft/windowsservercore
 LABEL maintainer="GoCD Team <go-cd-dev@googlegroups.com>"
 
+SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
+
 ENV TMP c:/tmp
 ENV TEMP c:/tmp
 
-COPY windows/user-config C:/Users/ContainerAdministrator/user-config
+COPY provision C:/Users/ContainerAdministrator/user-config
 COPY windows/*.ps1 C:/
 
-RUN powershell -File C:\install-packages.ps1
-RUN powershell -File C:\init-gradle-cache.ps1
+RUN powershell -File C:\install-packages.ps1; powershell -File C:\init-gradle-cache.ps1
 
 CMD C:\\go-agent.exe
