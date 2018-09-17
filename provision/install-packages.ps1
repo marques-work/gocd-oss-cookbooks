@@ -28,12 +28,13 @@ choco install -y nodejs.install --version="${NODEJS_VERSION}"
 choco install -y ruby --version=${RUBY_VERSION}
 choco install -y nant --version=${NANT_VERSION}
 choco install -y hg yarn jdk8 svn ant git
+choco install -y jdk8 --params "source=false" "static=false"
 
 # Remove chocolatey from temp location
 Remove-Item C:\\Users\\ContainerAdministrator\\AppData\\Local\\Temp\\chocolatey -Force -Recurse | Out-Null
 
 # install p4
-New-Item "${env:ProgramFiles(x86)}\\Perforce\\bin\\" -ItemType Directory
+New-Item "${env:ProgramFiles(x86)}\\Perforce\\bin\\" -ItemType Directory | Out-Null
 Invoke-WebRequest https://s3.amazonaws.com/mirrors-archive/local/perforce/r$P4_VERSION/bin.ntx64/p4.exe -Outfile "C:\\Program Files (x86)\\Perforce\\bin\\p4.exe"
 Invoke-WebRequest https://s3.amazonaws.com/mirrors-archive/local/perforce/r$P4D_VERSION/bin.ntx64/p4d.exe -Outfile "C:\\Program Files (x86)\\Perforce\\bin\\p4d.exe"
 
