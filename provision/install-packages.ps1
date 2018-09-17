@@ -6,9 +6,9 @@ $RUBY_VERSION='1.9.3.55100'
 $NANT_VERSION='0.92.2'
 
 # Copy over configs
-New-Item "${env:USERPROFILE}\.gradle" -ItemType Directory
-New-Item "${env:USERPROFILE}\.m2" -ItemType Directory
-New-Item "${env:USERPROFILE}\.bundle" -ItemType Directory
+New-Item "${env:USERPROFILE}\.gradle" -ItemType Directory | Out-Null
+New-Item "${env:USERPROFILE}\.m2" -ItemType Directory | Out-Null
+New-Item "${env:USERPROFILE}\.bundle" -ItemType Directory | Out-Null
 
 Copy-Item "$PSScriptroot\bundle-config" "${env:USERPROFILE}\.bundle\config"
 Copy-Item "$PSScriptroot\gitconfig-windows"     "${env:USERPROFILE}\.gitconfig"
@@ -30,7 +30,7 @@ choco install -y nant --version=${NANT_VERSION}
 choco install -y hg yarn jdk8 svn ant git
 
 # Remove chocolatey from temp location
-Remove-Item C:\\Users\\ContainerAdministrator\\AppData\\Local\\Temp\\chocolatey -Force -Recurse
+Remove-Item C:\\Users\\ContainerAdministrator\\AppData\\Local\\Temp\\chocolatey -Force -Recurse | Out-Null
 
 # install p4
 New-Item "${env:ProgramFiles(x86)}\\Perforce\\bin\\" -ItemType Directory
