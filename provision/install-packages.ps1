@@ -19,6 +19,7 @@ Copy-Item "$PSScriptroot\settings.xml"  "${env:USERPROFILE}\.m2\settings.xml"
 # install chocolatey
 $chocolateyUseWindowsCompression='false'
 $ErrorActionPreference = "Stop"
+$progressPreference = 'silentlyContinue'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 Set-ExecutionPolicy Bypass -Scope Process -Force
 iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
