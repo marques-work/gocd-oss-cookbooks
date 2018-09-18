@@ -3,4 +3,5 @@ Get-ChildItem env:
 Get-ChildItem env:
 refreshenv
 Get-ChildItem env:
+java -version
 &"$PSScriptroot\init-gradle-cache.ps1"
