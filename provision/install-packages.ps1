@@ -10,11 +10,11 @@ New-Item "${env:USERPROFILE}\.gradle" -ItemType Directory | Out-Null
 New-Item "${env:USERPROFILE}\.m2" -ItemType Directory | Out-Null
 New-Item "${env:USERPROFILE}\.bundle" -ItemType Directory | Out-Null
 
-Copy-Item "$PSScriptroot\bundle-config" "${env:USERPROFILE}\.bundle\config"
-Copy-Item "$PSScriptroot\gitconfig-windows"     "${env:USERPROFILE}\.gitconfig"
-Copy-Item "$PSScriptroot\init.gradle"   "${env:USERPROFILE}\.gradle\init.gradle"
-Copy-Item "$PSScriptroot\npmrc"         "${env:USERPROFILE}\.npmrc"
-Copy-Item "$PSScriptroot\settings.xml"  "${env:USERPROFILE}\.m2\settings.xml"
+Copy-Item "$PSScriptroot\bundle-config"       "${env:USERPROFILE}\.bundle\config"
+Copy-Item "$PSScriptroot\gitconfig-windows"   "${env:USERPROFILE}\.gitconfig"
+Copy-Item "$PSScriptroot\init.gradle"         "${env:USERPROFILE}\.gradle\init.gradle"
+Copy-Item "$PSScriptroot\npmrc"               "${env:USERPROFILE}\.npmrc"
+Copy-Item "$PSScriptroot\settings.xml"        "${env:USERPROFILE}\.m2\settings.xml"
 
 # install chocolatey
 $chocolateyUseWindowsCompression='false'
@@ -24,18 +24,19 @@ $progressPreference = 'silentlyContinue'
 Set-ExecutionPolicy Bypass -Scope Process -Force
 iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
+# install jabba
+Invoke-Expression (Invoke-WebRequest https://github.com/shyiko/jabba/raw/master/install.ps1 -UseBasicParsing).Content
+
 # install packages
 choco install -y nodejs.install --version="${NODEJS_VERSION}"
 choco install -y ruby --version=${RUBY_VERSION}
 choco install -y nant --version=${NANT_VERSION}
-choco install -y hg yarn jdk8 svn ant git
-choco install -y jdk8 --params "static=false"
+choco install -y hg yarn svn ant git
+
+jabba install 1.8
 
 # Remove chocolatey from temp location
 Remove-Item C:\\Users\\ContainerAdministrator\\AppData\\Local\\Temp\\chocolatey -Force -Recurse | Out-Null
-
-# install jabba
-Invoke-Expression (Invoke-WebRequest https://github.com/shyiko/jabba/raw/master/install.ps1 -UseBasicParsing).Content
 
 # install p4
 New-Item "${env:ProgramFiles(x86)}\\Perforce\\bin\\" -ItemType Directory | Out-Null
