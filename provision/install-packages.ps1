@@ -4,7 +4,7 @@ $P4D_VERSION='16.2'
 $NODEJS_VERSION='6.14.4'
 $RUBY_VERSION='2.3.3'
 $NANT_VERSION='0.92.2'
-
+$ANT_VERSION='1.10.1' # because newer ant versions will pull down a JRE, which we do not want
 # Copy over configs
 New-Item "${env:USERPROFILE}\.gradle" -ItemType Directory | Out-Null
 New-Item "${env:USERPROFILE}\.m2" -ItemType Directory | Out-Null
@@ -24,19 +24,19 @@ $progressPreference = 'silentlyContinue'
 Set-ExecutionPolicy Bypass -Scope Process -Force
 iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
-# install jabba
-Invoke-Expression (Invoke-WebRequest https://github.com/shyiko/jabba/raw/master/install.ps1 -UseBasicParsing).Content
-
 # install packages
 choco install -y nodejs.install --version="${NODEJS_VERSION}"
 choco install -y ruby --version=${RUBY_VERSION}
 choco install -y nant --version=${NANT_VERSION}
-choco install -y hg yarn svn ant git
+choco install -y ant --version=${ANT_VERSION}
+choco install -y hg yarn svn git
 
-jabba install 1.8
 
 # Remove chocolatey from temp location
 Remove-Item C:\\Users\\ContainerAdministrator\\AppData\\Local\\Temp\\chocolatey -Force -Recurse | Out-Null
+
+# install jabba
+Invoke-Expression (Invoke-WebRequest https://github.com/shyiko/jabba/raw/master/install.ps1 -UseBasicParsing).Content
 
 # install p4
 New-Item "${env:ProgramFiles(x86)}\\Perforce\\bin\\" -ItemType Directory | Out-Null
