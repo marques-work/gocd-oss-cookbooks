@@ -1,3 +1,4 @@
+Get-ChildItem env:
 &"$PSScriptroot\install-packages.ps1"
 Get-ChildItem env:
 refreshenv
