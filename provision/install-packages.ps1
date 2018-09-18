@@ -29,7 +29,7 @@ choco install -y nodejs.install --version="${NODEJS_VERSION}"
 choco install -y ruby --version=${RUBY_VERSION}
 choco install -y nant --version=${NANT_VERSION}
 choco install -y hg yarn jdk8 svn ant git
-choco install -y jdk8 --params "source=false" "static=false"
+choco install -y jdk8 --params "static=false"
 
 # Remove chocolatey from temp location
 Remove-Item C:\\Users\\ContainerAdministrator\\AppData\\Local\\Temp\\chocolatey -Force -Recurse | Out-Null
