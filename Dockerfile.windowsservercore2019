@@ -16,4 +16,5 @@ COPY provision C:\\Users\\ContainerAdministrator\\provision
 
 RUN powershell -File C:\\Users\\ContainerAdministrator\\provision\\provision.ps1
 
-CMD ["powershell", "-File", "C:\\Users\\ContainerAdministrator\\provision\\with-java.ps1", "C:\\go-agent.exe"]
+SHELL ["cmd", "/S", "/C"]
+CMD ["powershell.exe", "-NoLogo", "-ExecutionPolicy", "Bypass"]
